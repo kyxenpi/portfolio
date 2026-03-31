@@ -1,365 +1,453 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Kauê - Portfólio</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="icon" href="imgs/icon.png">
-  </head>
-  <body>
-    <header class="header">
-      <div class="header-inner">
-        <div class="brand">
-          <img src="imgs/profile.jpeg" alt="logo" class="logo clickable-logo" id="profile-logo" />
-          <div class="name-block">
-            <h1 class="name">Kauê Monteiro</h1>
-            <p class="role">Estudante • Desenvolvedor</p>
-          </div>
-        </div>
-        <div class="header-right">
-          <button
-            id="theme-toggle"
-            class="theme-toggle"
-            aria-label="Alternar modo escuro/claro"
-          >
-            <svg class="sun" viewBox="0 0 24 24">
-              <path
-                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-              />
-            </svg>
-            <svg class="moon" viewBox="0 0 24 24">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-            </svg>
-          </button>
-          <div class="header-links">
-            <a
-              href="https://github.com/kmdev-cmd"
-              target="_blank"
-              rel="noopener"
-              >GitHub</a
-            >
-            <a href="mailto:kmdev.cmd@gmail.com">Email</a>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <main class="main">
-      <section id="hero" class="hero">
-        <div class="hero-inner">
-          <h2 class="eyebrow">Olá, eu sou o Kauê</h2>
-          <h1 class="hero-title">Código em: luz, câmera e ação.</h1>
-          <p class="hero-sub">
-            Desenvolvedor autodidata focado em <strong>Python</strong> e
-            <strong>Web</strong>. Crio ferramentas práticas para problemas
-            reais.
-          </p>
-          <div class="hero-ctas">
-            <a class="cta" href="#projects">Explorar Projetos</a>
-            <button class="ghost" onclick="scrollToSection('contact')">
-              Falar comigo
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section id="about" class="section">
-        <h3 class="section-title">Sobre Mim</h3>
-        <div class="terminal-card terminal-dots">
-          <div class="terminal-content">
-            <div class="command">$ whoami</div>
-            <div class="output">kauê</div>
-            <div class="command">$ cat about.txt</div>
-            <div class="output">
-              Tenho <span class="highlight" id="dynamic-age">--</span> anos, estudante do 2º ano.<br>
-              Migrei para <span class="highlight">Garuda Linux (COSMIC)</span>, focando em<br>
-              um workflow de alto desempenho para desenvolvimento e automações.
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Kauê Monteiro - Desenvolvedor</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+        <link rel="icon" href="imgs/icon.png" />
+    </head>
+    <body>
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="loading-screen">
+            <div class="loader-container">
+                <div class="loader"></div>
+                <p class="loading-text">
+                    Carregando portfólio<span class="dot">.</span>
+                </p>
             </div>
-            <div class="command">$ ls skills/</div>
-            <div class="output">python.js web.html automation.sh linux.conf</div>
-          </div>
         </div>
-      </section>
 
-      <section id="services" class="section">
-        <h3 class="section-title">Especialidades</h3>
-        <div class="services-grid">
-          <div class="service-card">
-            <div class="service-icon">🐍</div>
-            <h4>Automação</h4>
-            <p>
-              Scripts Python para automação de tarefas e manipulação de
-              arquivos.
-            </p>
-          </div>
-          <div class="service-card">
-            <div class="service-icon">⚡</div>
-            <h4>Web Apps</h4>
-            <p>
-              Interfaces rápidas e minimalistas com foco em performance e UX.
-            </p>
-          </div>
-          <div class="service-card">
-            <div class="service-icon">🛠️</div>
-            <h4>Scraping</h4>
-            <p>
-              Extração de dados e integração com APIs para ferramentas
-              utilitárias.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section id="recent-repos" class="section">
-        <h3 class="section-title">Atividade Recente</h3>
-        <p class="section-text" style="margin-bottom: 2rem">
-          Últimos projetos atualizados no meu GitHub.
-        </p>
-        <div id="repo-cards-container" class="projects-grid"></div>
-      </section>
-
-      <section id="projects" class="section">
-        <h3 class="section-title">Projetos em Destaque</h3>
-        <div class="projects-grid">
-          <article class="project-card destaque">
-            <div class="project-content">
-              <span class="project-tech">JavaScript • Web Tool</span>
-              <h4 class="project-name">PDFinder</h4>
-              <p class="project-desc">
-                Buscador inteligente de PDFs educativos (livros, apostilas, mangás). Otimizado para resultados rápidos e relevantes.
-              </p>
-              <a href="https://kmdev-cmd.github.io/PDF/" class="project-link" target="_blank">
-                Acessar Demo →
-              </a>
+        <header class="header">
+            <div class="header-inner">
+                <div class="brand">
+                    <img
+                        src="imgs/profile.jpeg"
+                        alt="Foto de Kauê Monteiro"
+                        class="logo clickable-logo"
+                        id="profile-logo"
+                    />
+                    <div class="name-block">
+                        <h1 class="name">Kauê Monteiro</h1>
+                        <p class="role">
+                            Estudante de Ensino Médio • Desenvolvedor Full-Stack
+                        </p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button
+                        id="theme-toggle"
+                        class="theme-toggle"
+                        aria-label="Alternar tema"
+                    >
+                        <svg class="sun" viewBox="0 0 24 24">
+                            <path
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                            />
+                        </svg>
+                        <svg class="moon" viewBox="0 0 24 24">
+                            <path
+                                d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                            />
+                        </svg>
+                    </button>
+                    <div class="header-links">
+                        <a
+                            href="https://github.com/kmdev-cmd"
+                            target="_blank"
+                            rel="noopener"
+                            >GitHub</a
+                        >
+                        <a href="mailto:kmdev.cmd@gmail.com">Email</a>
+                    </div>
+                </div>
             </div>
-          </article>
-      
-          <article class="project-card">
-            <div class="project-content">
-              <span class="project-tech">Python • Interativo</span>
-              <h4 class="project-name">Serpentia</h4>
-              <p class="project-desc">
-                Laboratório interativo de exercícios Python para praticar lógica de programação de forma divertida.
-              </p>
-              <a href="https://github.com/kmdev-cmd/Serpentia" class="project-link" target="_blank">
-                Ver no GitHub →
-              </a>
+        </header>
+
+        <main class="main">
+            <!-- Hero -->
+            <section id="hero" class="hero">
+                <div class="hero-inner">
+                    <h2 class="eyebrow">Olá, eu sou o Kauê</h2>
+                    <h1 class="hero-title">
+                        Código que transforma ideias em
+                        <span class="highlight-title">experiência</span>.
+                    </h1>
+                    <p class="hero-sub">
+                        Desenvolvedor autodidata de 17 anos, apaixonado por
+                        <strong>Python</strong>, <strong>Web</strong> e
+                        automações inteligentes. Crio soluções práticas, rápidas
+                        e com atenção aos detalhes.
+                    </p>
+                    <div class="hero-ctas">
+                        <a class="cta" href="#projects">Explorar Projetos</a>
+                        <button
+                            class="ghost"
+                            onclick="scrollToSection('contact')"
+                        >
+                            Falar comigo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sobre Mim -->
+            <section id="about" class="section">
+                <h3 class="section-title">Sobre Mim</h3>
+                <div class="terminal-card terminal-dots">
+                    <div class="terminal-content">
+                        <div class="command">$ whoami</div>
+                        <div class="output">kauê monteiro</div>
+                        <div class="command">$ cat about.txt</div>
+                        <div class="output">
+                            Tenho
+                            <span class="highlight" id="dynamic-age">17</span>
+                            anos e estou no 3º ano do Ensino Médio.<br />
+                            Uso <span class="highlight">Arch Craft</span> como
+                            sistema principal.<br />
+                            Apaixonado por workflows minimalistas, performance e
+                            automações que realmente facilitam a vida.
+                        </div>
+                        <div class="command">$ ls skills/</div>
+                        <div class="output">
+                            python.js web.html automation.sh linux.conf
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Especialidades -->
+            <section id="services" class="section">
+                <h3 class="section-title">Especialidades</h3>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">🐍</div>
+                        <h4>Automação com Python</h4>
+                        <p>
+                            Scripts eficientes para tarefas repetitivas,
+                            manipulação de dados e integração de sistemas.
+                        </p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">⚡</div>
+                        <h4>Web Apps Modernas</h4>
+                        <p>
+                            Interfaces rápidas, minimalistas e com excelente
+                            usabilidade.
+                        </p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🛠️</div>
+                        <h4>Scraping &amp; APIs</h4>
+                        <p>
+                            Extração inteligente de dados e integração com
+                            serviços externos.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Atividade Recente -->
+            <section id="recent-repos" class="section">
+                <h3 class="section-title">Atividade Recente no GitHub</h3>
+                <p class="section-text">Últimos repositórios atualizados</p>
+                <div id="repo-cards-container" class="projects-grid"></div>
+            </section>
+
+            <!-- Projetos em Destaque -->
+            <section id="projects" class="section">
+                <h3 class="section-title">Projetos em Destaque</h3>
+                <div class="projects-grid">
+                    <article class="project-card destaque">
+                        <div class="project-content">
+                            <span class="project-tech"
+                                >JavaScript • Web Tool</span
+                            >
+                            <h4 class="project-name">PDFinder</h4>
+                            <p class="project-desc">
+                                Buscador inteligente de PDFs educativos (livros,
+                                apostilas, mangás). Rápido e otimizado.
+                            </p>
+                            <a
+                                href="https://kmdev-cmd.github.io/PDF/"
+                                class="project-link"
+                                target="_blank"
+                                >Acessar Demo →</a
+                            >
+                        </div>
+                    </article>
+                    <article class="project-card">
+                        <div class="project-content">
+                            <span class="project-tech">HTML • Web</span>
+                            <h4 class="project-name">Rhodium</h4>
+                            <p class="project-desc">
+                                Ferramenta prática para tarefas do dia a dia com
+                                design limpo.
+                            </p>
+                            <a
+                                href="https://github.com/kmdev-cmd/Rhodium"
+                                class="project-link"
+                                target="_blank"
+                                >Ver no GitHub →</a
+                            >
+                        </div>
+                    </article>
+                    <article class="project-card">
+                        <div class="project-content">
+                            <span class="project-tech"
+                                >Python • Interativo</span
+                            >
+                            <h4 class="project-name">Serpentia</h4>
+                            <p class="project-desc">
+                                Laboratório interativo de exercícios Python com
+                                feedback instantâneo.
+                            </p>
+                            <a
+                                href="https://github.com/kmdev-cmd/Serpentia"
+                                class="project-link"
+                                target="_blank"
+                                >Ver no GitHub →</a
+                            >
+                        </div>
+                    </article>
+                    <article class="project-card">
+                        <div class="project-content">
+                            <span class="project-tech"
+                                >Python • Produtividade</span
+                            >
+                            <h4 class="project-name">Nova Notes</h4>
+                            <p class="project-desc">
+                                Aplicativo de notas desktop com suporte a
+                                Markdown e organização inteligente.
+                            </p>
+                            <a
+                                href="https://github.com/kmdev-cmd/NovaNotes"
+                                class="project-link"
+                                target="_blank"
+                                >Ver no GitHub →</a
+                            >
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Certificações -->
+            <section id="certificates" class="section">
+                <h3 class="section-title">Certificações</h3>
+                <div class="certificates-grid">
+                    <div class="certificate-card">
+                        <div class="certificate-icon">🎓</div>
+                        <h4>Python Developer</h4>
+                        <p>
+                            Certificação de desenvolvedor Python pela Sololearn
+                        </p>
+                        <div class="certificate-links">
+                            <button
+                                class="certificate-link certificate-btn cta"
+                                data-certificate="python"
+                            >
+                                Ver Certificado →
+                            </button>
+                        </div>
+                        <span class="certificate-date">2026</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stack Técnica -->
+            <section id="skills" class="section">
+                <h3 class="section-title">Stack Técnica</h3>
+                <div class="skills-grid">
+                    <div class="skill-item">
+                        <img
+                            src="https://skillicons.dev/icons?i=python"
+                            alt="Python"
+                        />
+                    </div>
+                    <div class="skill-item">
+                        <img
+                            src="https://skillicons.dev/icons?i=linux"
+                            alt="Linux"
+                        />
+                    </div>
+                    <div class="skill-item">
+                        <img
+                            src="https://skillicons.dev/icons?i=supabase"
+                            alt="Supabase"
+                        />
+                    </div>
+                    <div class="skill-item">
+                        <img
+                            src="https://skillicons.dev/icons?i=git"
+                            alt="Git"
+                        />
+                    </div>
+                    <div class="skill-item">
+                        <img
+                            src="https://skillicons.dev/icons?i=html"
+                            alt="HTML"
+                        />
+                    </div>
+                    <div class="skill-item">
+                        <img
+                            src="https://skillicons.dev/icons?i=css"
+                            alt="CSS"
+                        />
+                    </div>
+                    <div class="skill-item">
+                        <img
+                            src="https://skillicons.dev/icons?i=js"
+                            alt="JavaScript"
+                        />
+                    </div>
+                    <div class="skill-item">
+                        <img
+                            src="https://skillicons.dev/icons?i=tailwindcss"
+                            alt="TailwindCSS"
+                        />
+                    </div>
+                    <div class="skill-item">
+                        <img
+                            src="https://skillicons.dev/icons?i=vite"
+                            alt="Vite"
+                        />
+                    </div>
+                    <div class="skill-item">
+                        <img
+                            src="https://skillicons.dev/icons?i=postgresql"
+                            alt="PostgreSQL"
+                        />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contato -->
+            <section id="contact" class="section">
+                <div class="contact-container">
+                    <h3 class="section-title">Vamos conversar?</h3>
+                    <div class="contact-grid">
+                        <a
+                            class="contact-btn"
+                            href="mailto:kmdev.cmd@gmail.com"
+                            aria-label="Email"
+                            title="Email"
+                        >
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="28"
+                                height="28"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path
+                                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                                />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>
+                        </a>
+
+                        <a
+                            class="contact-btn"
+                            href="https://github.com/kmdev-cmd"
+                            target="_blank"
+                            aria-label="GitHub"
+                            title="GitHub"
+                        >
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="28"
+                                height="28"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path
+                                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                                />
+                            </svg>
+                        </a>
+
+                        <a
+                            class="contact-btn"
+                            href="https://wa.me/5513974140538"
+                            target="_blank"
+                            aria-label="WhatsApp"
+                            title="WhatsApp"
+                        >
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="28"
+                                height="28"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path
+                                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-10.6 8.38 8.38 0 0 1 3.9.9L22 2l-2.1 4.7a8.38 8.38 0 0 1 .9 3.8z"
+                                />
+                            </svg>
+                        </a>
+
+                        <a
+                            class="contact-btn"
+                            href="https://www.linkedin.com/in/kau%C3%AA-leandro-farias-monteiro-80a9a13a2/"
+                            target="_blank"
+                            aria-label="LinkedIn"
+                            title="LinkedIn"
+                        >
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="28"
+                                height="28"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path
+                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                                ></path>
+                                <rect x="2" y="9" width="4" height="12"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modal Certificado -->
+        <div id="certificate-modal" class="certificate-modal">
+            <div class="certificate-modal-content">
+                <button
+                    class="certificate-modal-close"
+                    id="certificate-modal-close"
+                >
+                    &times;
+                </button>
+                <div class="certificate-modal-body">
+                    <img
+                        id="certificate-image"
+                        src=""
+                        alt="Certificado"
+                        class="certificate-modal-image"
+                    />
+                </div>
             </div>
-          </article>
-      
-          <article class="project-card">
-            <div class="project-content">
-              <span class="project-tech">Python • Produtividade</span>
-              <h4 class="project-name">Nova Notes</h4>
-              <p class="project-desc">
-                Aplicativo de notas desktop com suporte a Markdown e organização inteligente.
-              </p>
-              <a href="https://github.com/kmdev-cmd/NovaNotes" class="project-link" target="_blank">
-                Ver no GitHub →
-              </a>
-            </div>
-          </article>
-      
-          <article class="project-card">
-            <div class="project-content">
-              <span class="project-tech">Python • CLI</span>
-              <h4 class="project-name">Task Tracker CLI</h4>
-              <p class="project-desc">
-                Gerenciador de tarefas via linha de comando, simples e eficiente para o dia a dia.
-              </p>
-              <a href="https://github.com/kmdev-cmd/Task-Tracker-CLI" class="project-link" target="_blank">
-                Ver no GitHub →
-              </a>
-            </div>
-          </article>
-
-          <article class="project-card">
-            <div class="project-content">
-              <span class="project-tech">Python • Flask • Web Tool</span>
-              <h4 class="project-name">URL Shortener</h4>
-              <p class="project-desc">
-                Encurtador de URLs simples e funcional construído com Flask. Gera links curtos, armazena redirecionamentos e conta com interface minimalista.
-              </p>
-              <a href="https://km-shortener.netlify.app/" class="project-link" target="_blank">
-                Acessar Demo →
-              </a>
-            </div>
-          </article>
         </div>
-      </section>
 
-      <section id="certificates" class="section">
-        <h3 class="section-title">Certificações</h3>
-        <div class="certificates-grid">
-          <div class="certificate-card">
-            <div class="certificate-icon">🎓</div>
-            <h4>Python Developer</h4>
-            <p>Certificação de desenvolvedor Python pela plataforma Sololearn</p>
-            <div class="certificate-links">
-              <button class="certificate-link certificate-btn" data-certificate="python">Ver Certificado →</button>
-            </div>
-            <span class="certificate-date">2026</span>
-          </div>
-        </div>
-      </section>
-
-      <section id="skills" class="section">
-        <h3 class="section-title">Stack Técnica</h3>
-        <div class="skills-grid">
-          <div class="skill-item">
-            <img src="https://skillicons.dev/icons?i=python" alt="Python" />
-          </div>
-          <div class="skill-item">
-            <img src="https://skillicons.dev/icons?i=linux" alt="Linux" />
-          </div>
-          <div class="skill-item">
-            <img src="https://skillicons.dev/icons?i=supabase" alt="Supabase" />
-          </div>
-          <div class="skill-item">
-            <img src="https://skillicons.dev/icons?i=git" alt="Git" />
-          </div>
-          <div class="skill-item">
-            <img src="https://skillicons.dev/icons?i=html" alt="HTML" />
-          </div>
-          <div class="skill-item">
-            <img src="https://skillicons.dev/icons?i=css" alt="CSS" />
-          </div>
-          <div class="skill-item">
-            <img src="https://skillicons.dev/icons?i=js" alt="JavaScript" />
-          </div>
-          <div class="skill-item">
-            <img
-              src="https://skillicons.dev/icons?i=tailwindcss"
-              alt="TailwindCSS"
-            />
-          </div>
-          <div class="skill-item">
-            <img src="https://skillicons.dev/icons?i=vite" alt="Vite" />
-          </div>
-          <div class="skill-item">
-            <img
-              src="https://skillicons.dev/icons?i=postgresql"
-              alt="PostgreSQL"
-            />
-          </div>
-        </div>
-      </section>
-
-      <section id="contact" class="section">
-        <div class="contact-container">
-          <h3 class="section-title">Vamos conversar?</h3>
-          <div class="contact-grid">
-            <a
-              class="contact-btn"
-              href="mailto:kmdev.cmd@gmail.com"
-              aria-label="Email"
-              title="Email"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                width="28"
-                height="28"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
-                />
-                <polyline points="22,6 12,13 2,6" />
-              </svg>
-            </a>
-
-            <a
-              class="contact-btn"
-              href="https://github.com/kmdev-cmd"
-              target="_blank"
-              aria-label="GitHub"
-              title="GitHub"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                width="28"
-                height="28"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
-                />
-              </svg>
-            </a>
-
-            <a
-              class="contact-btn"
-              href="https://wa.me/5513974140538"
-              target="_blank"
-              aria-label="WhatsApp"
-              title="WhatsApp"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                width="28"
-                height="28"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-10.6 8.38 8.38 0 0 1 3.9.9L22 2l-2.1 4.7a8.38 8.38 0 0 1 .9 3.8z"
-                />
-              </svg>
-            </a>
-
-            <a
-              class="contact-btn"
-              href="https://www.linkedin.com/in/kau%C3%AA-leandro-farias-monteiro-80a9a13a2/"
-              target="_blank"
-              aria-label="LinkedIn"
-              title="LinkedIn"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                width="28"
-                height="28"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                <rect x="2" y="9" width="4" height="12"></rect>
-                <circle cx="4" cy="4" r="2"></circle>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Modal do Certificado -->
-    <div id="certificate-modal" class="certificate-modal">
-      <div class="certificate-modal-content">
-        <button class="certificate-modal-close" id="certificate-modal-close">&times;</button>
-        <div class="certificate-modal-body">
-          <img id="certificate-image" src="" alt="Certificado" class="certificate-modal-image">
-        </div>
-      </div>
-    </div>
-
-    <script src="script.js"></script>
-  </body>
+        <script src="script.js"></script>
+    </body>
 </html>
