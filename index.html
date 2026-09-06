@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KL Com — Engineering the Agentic Era</title>
+<meta name="description" content="Portfólio de KL Com — engenharia de agentes autônomos e interfaces de alta fidelidade. OpenJarvis, SchoolFlow, Opallium e OpenBridge.">
+<meta name="theme-color" content="#030303">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KL Com — Engineering the Agentic Era">
+<meta property="og:description" content="Engenharia agêntica & interfaces de alta fidelidade.">
+<meta property="og:url" content="https://klcom.netlify.app/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030303'/%3E%3Ctext x='32' y='45' font-family='monospace' font-size='38' fill='%2300d4ff' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E">
+
+<!-- Self-hosted fonts -->
+<link rel="preload" href="fonts/geist-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/geist-latin-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/geist-latin-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/geist-mono-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+
+<script>matchMedia('(prefers-reduced-motion: reduce)').matches && document.documentElement.classList.add('reduce-motion');</script>
+
+<style>
+  @font-face {
+    font-family: "Geist"; font-weight: 400; font-display: swap;
+    src: url("fonts/geist-latin-400.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Geist"; font-weight: 600; font-display: swap;
+    src: url("fonts/geist-latin-600.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Geist"; font-weight: 800; font-display: swap;
+    src: url("fonts/geist-latin-800.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Geist Mono"; font-weight: 400; font-display: swap;
+    src: url("fonts/geist-mono-latin-400.woff2") format("woff2");
+  }
+
+  :root {
+    --bg: #030303;
+    --fg: #e2e2e2;
+    --accent: #00d4ff;
+    --accent-rgb: 0, 212, 255;
+    --zinc-900: #0f0f0f;
+    --zinc-800: #1a1a1a;
+    --sans: "Geist", -apple-system, system-ui, sans-serif;
+    --mono: "Geist Mono", ui-monospace, monospace;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --radius: 45px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* Lenis CSS */
+  html.lenis { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto; }
+  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-stopped { overflow: hidden; }
+
+  html {
+    color-scheme: dark;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.15) transparent;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+
+  ::selection { background: var(--accent); color: #000; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+
+  /* Textures & Backgrounds */
+  .noise {
+    position: fixed; inset: 0; z-index: 999; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.04;
+  }
+
+  .floating-blob {
+    position: fixed; width: 800px; height: 800px; border-radius: 50%;
+    filter: blur(120px); opacity: 0.15; pointer-events: none; z-index: -1;
+    will-change: transform;
+    background: radial-gradient(circle, rgba(var(--accent-rgb), 0.4) 0%, transparent 70%);
+  }
+
+  /* HUD Overlay */
+  .hud-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
+  .hud-vignette { position: absolute; inset: 0; background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.9) 150%); }
+  .hud-scanlines { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(var(--accent-rgb), 0.01) 1px, rgba(var(--accent-rgb), 0.01) 2px); }
+  .hud-grid {
+    --mx: 50vw; --my: 40vh;
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(var(--accent-rgb), 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--accent-rgb), 0.05) 1px, transparent 1px);
+    background-size: 100px 100px; opacity: 0.2;
+    -webkit-mask-image: radial-gradient(circle 300px at var(--mx) var(--my), black 0%, transparent 100%);
+    mask-image: radial-gradient(circle 300px at var(--mx) var(--my), black 0%, transparent 100%);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  /* Typography */
+  h1, h2, h3 { letter-spacing: -0.05em; line-height: 0.9; font-weight: 800; text-transform: uppercase; }
+  p { color: #a1a1aa; max-width: 65ch; }
+
+  /* Components */
+  .button {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 18px 40px; border-radius: var(--radius); font-weight: 600;
+    font-size: 14px; border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.03); backdrop-filter: blur(20px);
+    cursor: pointer; transition: 0.4s var(--ease); text-transform: uppercase;
+    letter-spacing: 0.1em; color: inherit; text-decoration: none;
+  }
+  .button:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); transform: scale(1.05); }
+  .button:active { transform: scale(0.97); }
+  .button.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+  /* Sections */
+  section { position: relative; width: 100%; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; padding: 0 5vw; }
+
+  /* 01. HERO */
+  .hero { align-items: center; justify-content: center; text-align: center; }
+  .hero-content { z-index: 10; position: relative; }
+  .hero h1 { font-size: clamp(60px, 18vw, 240px); margin-bottom: 30px; line-height: 0.85; }
+  .hero p { font-size: clamp(18px, 2.5vw, 28px); margin: 0 auto 50px; font-weight: 500; color: #eee; }
+
+  .hero-btns { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+
+  .hero-scroll-cue {
+    position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 10px; opacity: 0.7; letter-spacing: 0.3em;
+  }
+
+  /* 02. AGENT HUD */
+  .agent-stack { background: #000; padding: 120px 5vw; justify-content: center; align-items: center; }
+  .hud-container {
+    width: 100%; max-width: 1300px; border: 1px solid rgba(var(--accent-rgb), 0.2);
+    background: rgba(2, 2, 5, 0.7); backdrop-filter: blur(40px);
+    border-radius: var(--radius); padding: 60px; position: relative;
+    box-shadow: 0 0 120px rgba(var(--accent-rgb), 0.05);
+  }
+  .hud-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 50px; border-bottom: 1px solid rgba(var(--accent-rgb), 0.1); padding-bottom: 30px; }
+  .hud-brand { font-family: var(--mono); font-weight: 400; font-size: 12px; color: var(--accent); letter-spacing: 0.3em; }
+  .hud-status { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 12px; }
+  .hud-dot { width: 10px; height: 10px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 15px #00ff88; }
+
+  .hud-main { display: grid; grid-template-columns: 1fr 340px; gap: 60px; }
+  .hud-feed { font-family: var(--mono); font-size: 13px; max-height: 450px; overflow-y: auto; color: #777; scrollbar-width: none; }
+  .hud-feed::-webkit-scrollbar { display: none; }
+  .hud-line { margin-bottom: 12px; display: flex; gap: 20px; }
+  .hud-ts { color: var(--accent); opacity: 0.55; flex-shrink: 0; }
+  .hud-msg { color: #aaa; }
+  .hud-msg.highlight { color: #fff; font-weight: 600; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+
+  .hud-aside { display: contents; }
+  .hud-panel { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 30px; margin-bottom: 20px; }
+  .hud-panel h3 { font-family: var(--mono); font-weight: 400; font-size: 11px; color: var(--accent); margin-bottom: 15px; letter-spacing: 0.2em; }
+  .hud-list { list-style: none; font-size: 13px; color: #999; }
+  .hud-list li { margin-bottom: 8px; display: flex; justify-content: space-between; font-family: var(--mono); }
+
+  /* 03. PROJECTS - HORIZONTAL PINNED */
+  .projects-section { padding: 0; height: 100vh; height: 100svh; overflow: hidden; display: flex; align-items: center; background: #000; }
+  .projects-title { position: absolute; top: 10vh; left: 5vw; z-index: 10; font-size: 8vw; opacity: 0.08; pointer-events: none; }
+
+  .projects-container {
+    height: 80vh; height: 80svh; display: flex; align-items: center;
+    padding-left: 20vw; /* Start with first project centered-ish */
+    padding-right: 20vw;
+    will-change: transform;
+  }
+
+  .project-card {
+    flex: 0 0 600px; height: 600px; background: var(--zinc-900);
+    border-radius: var(--radius); margin-right: 80px; position: relative;
+    border: 1px solid rgba(255,255,255,0.05); overflow: hidden;
+    transition: border-color 0.6s var(--ease);
+    display: flex; flex-direction: column;
+  }
+  .project-card:hover { border-color: var(--accent); }
+
+  /* Generated cover art — no binary assets needed */
+  .project-art {
+    width: 100%; height: 320px; position: relative; overflow: hidden; flex-shrink: 0;
+    background:
+      radial-gradient(120% 90% at 20% 0%, rgba(var(--accent-rgb), 0.16), transparent 55%),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 48px),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 48px),
+      linear-gradient(160deg, #101013, #0a0a0c);
+    transition: opacity 0.6s;
+  }
+  .project-art::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.5), transparent);
+  }
+  .project-art span {
+    position: absolute; right: 28px; bottom: -12px;
+    font-family: var(--mono); font-weight: 400; font-size: 160px; line-height: 1;
+    letter-spacing: -0.04em; color: rgba(var(--accent-rgb), 0.06);
+    -webkit-text-stroke: 1px rgba(var(--accent-rgb), 0.22);
+    transition: -webkit-text-stroke-color 0.6s;
+  }
+  .project-card:hover .project-art span { -webkit-text-stroke-color: rgba(var(--accent-rgb), 0.45); }
+  .project-card:hover .project-art { opacity: 0.85; }
+
+  .project-content { padding: 45px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+  .project-meta { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.3em; margin-bottom: 10px; }
+  .project-content h3 { font-size: 42px; margin-bottom: 15px; color: #fff; }
+  .project-content p { font-size: 17px; color: #999; line-height: 1.4; }
+  .project-btn { align-self: flex-start; margin-top: 30px; font-weight: 700; color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+  .project-btn .arrow { transition: transform 0.4s var(--ease); }
+  .project-btn:hover .arrow { transform: translateX(6px); }
+
+  /* 04. CONTACT */
+  .contact { align-items: center; justify-content: center; text-align: center; padding: 150px 5vw; }
+  .contact h2 { font-size: clamp(50px, 10vw, 140px); margin-bottom: 60px; }
+  .contact-grid { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; }
+  .contact-item {
+    width: 320px; max-width: 100%; padding: 60px 40px; border-radius: var(--radius);
+    background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.05);
+    transition: 0.5s var(--ease); text-decoration: none;
+  }
+  .contact-item:hover { background: rgba(var(--accent-rgb), 0.05); border-color: var(--accent); transform: translateY(-10px); }
+  .contact-item h3 { font-size: 14px; margin-bottom: 15px; color: var(--accent); font-family: var(--mono); font-weight: 400; letter-spacing: 0.2em; }
+  .contact-item p { font-size: 20px; color: #fff; font-weight: 600; margin: 0 auto; overflow-wrap: anywhere; }
+
+  footer { padding: 80px 5vw; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em; }
+  footer a { color: inherit; text-decoration: none; transition: color 0.3s; }
+  footer a:hover { color: var(--accent); }
+
+  /* Mobile: native horizontal swipe with snap instead of pinned scroll */
+  @media (max-width: 768px) {
+    :root { --radius: 35px; }
+    section { padding-left: 7vw; padding-right: 7vw; }
+    .hud-container { padding: 32px 24px; border-radius: 35px; }
+    .hud-main { grid-template-columns: 1fr; gap: 36px; }
+    .projects-section { height: auto; min-height: 0; padding: 110px 0; }
+    .projects-title { position: static; margin: 0 0 48px; padding: 0 7vw; font-size: 17vw; }
+    .projects-container {
+      height: auto; overflow-x: auto; overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+      padding: 8px 7vw 32px; scrollbar-width: none;
+    }
+    .projects-container::-webkit-scrollbar { display: none; }
+    .project-card { flex: 0 0 85vw; height: 550px; margin-right: 30px; scroll-snap-align: center; }
+    .project-content h3 { font-size: 32px; }
+    .project-art { height: 240px; }
+    .project-art span { font-size: 120px; }
+    .project-content { padding: 34px 30px; }
+  }
+
+  /* Reduced motion: same swipe treatment at every viewport, no pinning */
+  html.reduce-motion .projects-section { height: auto; min-height: 0; padding: 140px 0; }
+  html.reduce-motion .projects-title { position: static; padding: 0 5vw; margin-bottom: 60px; }
+  html.reduce-motion .projects-container {
+    height: auto; overflow-x: auto; scroll-snap-type: x proximity;
+    padding: 8px 5vw 40px;
+  }
+  html.reduce-motion .project-card { scroll-snap-align: center; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="noise" aria-hidden="true"></div>
+<div class="floating-blob" id="blob-1" aria-hidden="true"></div>
+<div class="floating-blob" id="blob-2" aria-hidden="true"></div>
+<div class="floating-blob" id="blob-3" aria-hidden="true"></div>
+
+<div class="hud-overlay" aria-hidden="true">
+  <div class="hud-vignette"></div>
+  <div class="hud-scanlines"></div>
+  <div class="hud-grid"></div>
+</div>
+
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <h1 id="hero-title">K.L. COM</h1>
+    <p id="hero-p">Engenharia Agêntica & Interfaces de Alta Fidelidade.</p>
+    <div class="hero-btns" id="hero-btns">
+      <a href="#projects" class="button primary">Ativos 2026</a>
+      <a href="#agent" class="button">Status Jarvis</a>
+    </div>
+  </div>
+  <div class="hero-scroll-cue">SCROLL TO CONNECT</div>
+</section>
+
+<section class="agent-stack" id="agent">
+  <div class="hud-container">
+    <div class="hud-header">
+      <h2 class="hud-brand">ORACLE KERNEL — v6.0.0-PRO</h2>
+      <div class="hud-status">
+        <span class="hud-dot"></span>
+        UPLINK STABLE // LIVE 2026
+      </div>
+    </div>
+    <div class="hud-main">
+      <div class="hud-feed" id="hud-feed" data-lenis-prevent tabindex="0" aria-label="Log de atividade do agente">
+        <div class="hud-line"><span class="hud-ts">[22:31:05]</span> <span class="hud-msg highlight">INITIALIZING OPERATOR...</span></div>
+        <div class="hud-line"><span class="hud-ts">[22:31:07]</span> <span class="hud-msg">OMNIROUTE SYNC: SUCCESS [LOCAL]</span></div>
+        <div class="hud-line"><span class="hud-ts">[22:31:08]</span> <span class="hud-msg">MEMORY BANK: memory.md LOADED</span></div>
+        <div class="hud-line"><span class="hud-ts">[22:31:10]</span> <span class="hud-msg">AUDIO CAPTURE: ACTIVE [JARVIS]</span></div>
+        <div class="hud-line"><span class="hud-ts">[22:31:12]</span> <span class="hud-msg highlight">SYSTEM ONLINE. WAITING FOR INPUT...</span></div>
+        <div class="hud-line"><span class="hud-ts">[22:35:40]</span> <span class="hud-msg">USER: "Jarvis, otimize o protocolo visual."</span></div>
+        <div class="hud-line"><span class="hud-ts">[22:35:41]</span> <span class="hud-msg highlight">EXECUTING PASS 1: IMPECCABLE CRAFT...</span></div>
+        <div class="hud-line"><span class="hud-ts">[22:35:45]</span> <span class="hud-msg">DEEP_TASK DELEGATION: STARTED</span></div>
+        <div class="hud-line"><span class="hud-ts">[22:35:50]</span> <span class="hud-msg">CRAFT FLOOR VALIDATION: 100% PASS</span></div>
+        <div class="hud-line"><span class="hud-ts">[22:36:01]</span> <span class="hud-msg highlight">INTERFACE REDESIGNED. 2026 READY.</span></div>
+      </div>
+      <div class="hud-aside">
+        <div class="hud-panel">
+          <h3>PROTOCOLO</h3>
+          <ul class="hud-list">
+            <li><span>Autonomous</span> <span>ENABLED</span></li>
+            <li><span>Deep Task</span> <span>ACTIVE</span></li>
+            <li><span>Memory</span> <span>PERSISTENT</span></li>
+            <li><span>Uptime</span> <span>99.9%</span></li>
+          </ul>
+        </div>
+        <div class="hud-panel">
+          <h3>HARDWARE</h3>
+          <ul class="hud-list">
+            <li><span>Model</span> <span>AUTO/BEST</span></li>
+            <li><span>Voice</span> <span>PIPER PRO</span></li>
+            <li><span>STT</span> <span>WHISPER+</span></li>
+            <li><span>Latency</span> <span>380ms</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="projects-section" id="projects">
+  <h2 class="projects-title">SELECTED WORK</h2>
+  <div class="projects-container" id="projects-container">
+
+    <article class="project-card">
+      <div class="project-art" aria-hidden="true"><span>01</span></div>
+      <div class="project-content">
+        <div>
+          <p class="project-meta">01 // AI AGENT</p>
+          <h3>OpenJarvis</h3>
+          <p>Núcleo agêntico autônomo com controle total de sistema e raciocínio profundo via OmniRoute.</p>
+        </div>
+        <a href="https://github.com/klcombr/OpenJarvis" class="project-btn">EXPLORE SOURCE <span class="arrow">→</span></a>
+      </div>
+    </article>
+
+    <article class="project-card">
+      <div class="project-art" aria-hidden="true"><span>02</span></div>
+      <div class="project-content">
+        <div>
+          <p class="project-meta">02 // ARCHITECTURE</p>
+          <h3>SchoolFlow</h3>
+          <p>Sistema operacional para gestão inteligente de fluxos educacionais complexos.</p>
+        </div>
+        <a href="https://github.com/klcombr/schoolflow" class="project-btn">VIEW BUILD <span class="arrow">→</span></a>
+      </div>
+    </article>
+
+    <article class="project-card">
+      <div class="project-art" aria-hidden="true"><span>03</span></div>
+      <div class="project-content">
+        <div>
+          <p class="project-meta">03 // OS DESIGN</p>
+          <h3>Opallium</h3>
+          <p>Interface de desenvolvimento focada em foco cognitivo e economia visual absoluta.</p>
+        </div>
+        <a href="https://github.com/klcombr/Opallium" class="project-btn">INSPECT <span class="arrow">→</span></a>
+      </div>
+    </article>
+
+    <article class="project-card">
+      <div class="project-art" aria-hidden="true"><span>04</span></div>
+      <div class="project-content">
+        <div>
+          <p class="project-meta">04 // PROTOCOL</p>
+          <h3>OpenBridge</h3>
+          <p>Ponte agnóstica para sincronização instantânea entre ecosistemas móveis e desktop.</p>
+        </div>
+        <a href="https://github.com/klcombr/openbridge" class="project-btn">VIEW README <span class="arrow">→</span></a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="reveal">
+    <h2>Datalink.</h2>
+    <div class="contact-grid">
+      <a href="https://github.com/klcombr" target="_blank" rel="noopener noreferrer" class="contact-item">
+        <h3>GITHUB</h3>
+        <p>@klcombr</p>
+      </a>
+      <a href="mailto:mxlsc@proton.me" class="contact-item">
+        <h3>PROTON</h3>
+        <p>mxlsc@proton.me</p>
+      </a>
+      <a href="https://klcom.netlify.app/" target="_blank" rel="noopener noreferrer" class="contact-item">
+        <h3>NETLIFY</h3>
+        <p>klcom.netlify.app</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>AUTHENTICATED SESSION // 2026 // KL COM</div>
+  <div>
+    <a href="#hero">REINITIALIZE</a>
+  </div>
+</footer>
+
+<!-- Local vendored libraries (no CDN dependency) -->
+<script src="vendor/lenis.min.js"></script>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+
+<script>
+(() => {
+  const hasLibs = typeof window.gsap !== "undefined"
+    && typeof window.ScrollTrigger !== "undefined"
+    && typeof window.Lenis !== "undefined";
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // 01. SMOOTH SCROLL (Lenis driven by GSAP ticker for perfect sync)
+  let lenis = null;
+  if (hasLibs && !reduceMotion) {
+    gsap.registerPlugin(ScrollTrigger);
+    lenis = new Lenis({
+      duration: 1.4,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", function (e) {
+        const target = document.querySelector(this.getAttribute("href"));
+        if (target) {
+          e.preventDefault();
+          lenis.scrollTo(target, { offset: 0, duration: 1.5 });
+        }
+      });
+    });
+  }
+
+  // Without libraries or with reduced motion the page stays fully visible and static.
+  if (!hasLibs || reduceMotion) return;
+
+  // 02. BACKGROUND EFFECTS
+  gsap.to("#blob-1", { x: "20vw", y: "30vh", duration: 20, repeat: -1, yoyo: true, ease: "sine.inOut" });
+  gsap.to("#blob-2", { x: "-20vw", y: "-30vh", duration: 15, repeat: -1, yoyo: true, ease: "sine.inOut" });
+  gsap.to("#blob-3", { x: "30vw", y: "-20vh", duration: 25, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2 });
+
+  // 04. HERO ENTRANCE
+
+  gsap.to(".hero-scroll-cue", { y: 8, opacity: 0.25, duration: 1.2, ease: "sine.inOut", repeat: -1, yoyo: true });
+
+  // 03. POINTER EFFECTS (fine pointers only; mask via CSS vars on one rAF per frame)
+  if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    const grid = document.querySelector(".hud-grid");
+    const title = document.querySelector("#hero-title");
+    gsap.set(title, { transformPerspective: 900 });
+    const qx = gsap.quickTo(title, "x", { duration: 0.7, ease: "power3" });
+    const qy = gsap.quickTo(title, "y", { duration: 0.7, ease: "power3" });
+    const qrx = gsap.quickTo(title, "rotateX", { duration: 0.7, ease: "power3" });
+    const qry = gsap.quickTo(title, "rotateY", { duration: 0.7, ease: "power3" });
+
+    let pending = null;
+    document.addEventListener("mousemove", (e) => {
+      pending = e;
+      if (pending._queued) return;
+      pending._queued = true;
+      requestAnimationFrame(() => {
+        const { clientX, clientY } = pending;
+        pending._queued = false;
+        grid.style.setProperty("--mx", clientX + "px");
+        grid.style.setProperty("--my", clientY + "px");
+        const dx = (clientX - innerWidth / 2) / (innerWidth / 2);
+        const dy = (clientY - innerHeight / 2) / (innerHeight / 2);
+        qx(dx * 20); qy(dy * 20); qry(dx * 8); qrx(-dy * 8);
+      });
+    });
+  }
+
+  // 04. HERO ENTRANCE
+  gsap.timeline()
+    .from("#hero-title", { opacity: 0, scale: 0.9, filter: "blur(20px)", duration: 2, ease: "expo.out" })
+    .from("#hero-p", { opacity: 0, y: 20, duration: 1, ease: "expo.out" }, "-=1.4")
+    .from("#hero-btns", { opacity: 0, y: 10, duration: 1, ease: "expo.out" }, "-=0.8");
+
+  // 05. HUD FEED REVEAL (initial state set from JS so no-JS users see the log)
+  gsap.set(".hud-line", { opacity: 0, x: -15 });
+  gsap.to(".hud-line", {
+    opacity: 1, x: 0, stagger: 0.1, duration: 0.8, ease: "power2.out",
+    scrollTrigger: { trigger: ".hud-container", start: "top 75%" }
+  });
+
+  // 06. HORIZONTAL PROJECTS SCROLL — desktop only, single scrub tween reused
+  // as containerAnimation (the old code created competing tweens).
+  const mm = gsap.matchMedia();
+  mm.add("(min-width: 769px)", () => {
+    const track = document.querySelector("#projects-container");
+    const amountToScroll = () => track.scrollWidth - window.innerWidth;
+
+    const scrollTween = gsap.to(track, {
+      x: () => -amountToScroll(),
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".projects-section",
+        pin: true,
+        scrub: 1,
+        start: "top top",
+        end: () => "+=" + amountToScroll(),
+        invalidateOnRefresh: true,
+      },
+    });
+
+    gsap.utils.toArray(".project-card").forEach((card) => {
+      gsap.from(card, {
+        opacity: 0, scale: 0.85, rotateY: -12, ease: "none",
+        scrollTrigger: {
+          trigger: card,
+          containerAnimation: scrollTween,
+          start: "left 95%",
+          end: "left 55%",
+          scrub: true,
+        },
+      });
+    });
+  });
+
+  // 07. SECTION REVEALS
+  gsap.utils.toArray(".reveal").forEach((el) => {
+    gsap.from(el, {
+      opacity: 0, y: 40, duration: 1.5, ease: "expo.out",
+      scrollTrigger: { trigger: el, start: "top 85%" }
+    });
+  });
+
+  // Re-measure pins after fonts finish swapping.
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => ScrollTrigger.refresh());
+  }
+})();
+</script>
+
+</body>
+</html>
