@@ -6,7 +6,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none';">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta http-equiv="X-Frame-Options" content="DENY">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()">
 <meta name="robots" content="index, follow">
@@ -84,12 +83,15 @@ section{position:relative;width:100%;overflow:hidden}
 .manifesto-visual::before{content:"";position:absolute;inset:0;border-radius:var(--r);background:conic-gradient(from var(--angle,0deg) at var(--mx,50%) var(--my,50%),rgba(255,34,34,.8),rgba(255,34,34,.1) 30%,rgba(255,255,255,.03) 50%,rgba(255,34,34,.1) 70%,rgba(255,34,34,.8));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;padding:2px;opacity:0;transition:opacity .4s;pointer-events:none;z-index:1}
 .manifesto-visual:hover::before{opacity:1}
 .manifesto-visual:hover{transform:scale(1.02)}
-.manifesto-visual .fill{position:absolute;inset:0;background:linear-gradient(135deg,#0a0a0a,#111);display:flex;align-items:center;justify-content:center;border-radius:var(--r);z-index:2}
-.manifesto-visual .monogram{font-size:180px;font-weight:800;color:rgba(255,34,34,.12);-webkit-text-stroke:2px rgba(255,34,34,.2);line-height:1}
+.manifesto-visual .fill{position:absolute;inset:0;background:linear-gradient(135deg,#0c0c0c,#111);display:flex;align-items:center;justify-content:center;border-radius:var(--r);z-index:2;overflow:hidden}
+.manifesto-visual .fill::before{content:"";position:absolute;width:200%;height:200%;background:conic-gradient(from 0deg at 50% 50%,transparent 0%,rgba(255,34,34,.04) 10%,transparent 20%);animation:rotateGlow 8s linear infinite}
+@keyframes rotateGlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.manifesto-visual .monogram{font-size:180px;font-weight:800;color:rgba(255,34,34,.15);-webkit-text-stroke:2px rgba(255,34,34,.25);line-height:1;position:relative;z-index:1}
 .manifesto-visual::after{content:"";position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red),transparent);opacity:.3;z-index:3}
 
 /* ═══ SERVICES ═══ */
 .services{padding:160px 8vw}
+.services .svc-row{max-width:900px}
 .services h2{font-size:clamp(36px,5vw,64px);margin-bottom:80px}
 .svc-row{display:grid;grid-template-columns:1fr 1fr;gap:40px 80px;max-width:1100px}
 .svc{padding:40px;border-radius:var(--r);transition:transform .4s var(--ease);position:relative;cursor:none;background:#0d0d0d;z-index:0}
@@ -125,7 +127,7 @@ section{position:relative;width:100%;overflow:hidden}
 .proj a:hover::after{width:100%}
 
 /* ═══ CONTACT ═══ */
-.contact{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 8vw;position:relative}
+.contact{min-height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 8vw;position:relative}
 .contact-glow{position:absolute;top:50%;left:50%;width:500px;height:500px;background:radial-gradient(circle,rgba(255,34,34,.04) 0%,transparent 70%);transform:translate(-50%,-50%);pointer-events:none}
 .contact h2{font-size:clamp(56px,12vw,180px);margin-bottom:48px;overflow:hidden;position:relative;z-index:2}
 .contact h2 .line{display:block;overflow:hidden}
@@ -523,7 +525,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--red)}
   const eG=new THREE.Group();
   const ewG=new THREE.SphereGeometry(.05,6,6),ewM=new THREE.MeshStandardMaterial({color:0xccccaa,roughness:.3,emissive:0x222200});
   const epG=new THREE.SphereGeometry(.025,5,5),epM=new THREE.MeshBasicMaterial({color:0x000000});
-  [.14,-.14].forEach(z=>{const e=new THREE.Mesh(ewG,ewM);e.add(Object.assign(new THREE.Mesh(epG,epM),{position:new THREE.Vector3(0,0,.03)}));e.position.set(.08,.07,z);eG.add(e)});bg.add(eG);
+  [.14,-.14].forEach(z=>{const e=new THREE.Mesh(ewG,ewM);const p=new THREE.Mesh(epG,epM);p.position.set(0,0,.03);e.add(p);e.position.set(.08,.07,z);eG.add(e)});bg.add(eG);
   const tG=new THREE.Group(),tMt=new THREE.MeshBasicMaterial({color:0xff3333});
   const tB=new THREE.Mesh(new THREE.CylinderGeometry(.008,.005,.25,4),tMt);tB.rotation.x=Math.PI/2;tB.position.z=.18;
   const tL=new THREE.Mesh(new THREE.ConeGeometry(.006,.12,4),tMt);tL.rotation.x=Math.PI/2;tL.rotation.z=.3;tL.position.set(.02,0,.32);
@@ -547,8 +549,8 @@ footer a{transition:color .3s}footer a:hover{color:var(--red)}
       const pos=S[i].sc.clone().lerp(cp,sg);
       S[i].mesh.position.copy(pos);S[i].mesh.lookAt(cPt.clone().add(tan));
       const yf=pos.y<-8?Math.max(0,1+(pos.y+8)/6):1;
-      const xf=i>N*.75?1-((i-N*.75)/(N*.25))*.6:1;
-      S[i].mesh.material.opacity=yf*xf;S[i].mesh.material.transparent=true;
+      const xf=i>N*.85?1-((i-N*.85)/(N*.15))*.5:1;
+      S[i].mesh.material.opacity=Math.max(.15,yf*xf);S[i].mesh.material.transparent=true;
     }
     const hPt=cv3.getPointAt(hT),hTan=cv3.getTangentAt(hT);
     const hF=S[0].sc.clone().lerp(hPt,g);
